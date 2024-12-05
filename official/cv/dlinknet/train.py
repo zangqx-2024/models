@@ -66,11 +66,11 @@ if __name__ == "__main__":
     context.set_context(mode=context.GRAPH_MODE,
                         device_target=args.device_target,
                         jit_config={"jit_level": args.jit_level})
-    epoch_num = args.epoch_num
+    epoch_size = args.epoch_size
     if args.run_distribute:
         init()
         device_num = get_group_size()
-        epoch_num = args.distribute_epoch_num
+        epoch_size = args.distribute_epoch_size
         print("group_size(device_num) is: ", device_num)
         rank_id = get_rank()
         print("rank_id is: ", rank_id)
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     # callback
     myCallback = MyCallback(file_name, rank_label, device_num, show_step=False, lr=learning_rate, model_name=args.model_name)
     # train
-    trainer.train(args.epoch_size, dataset_train, callbacks=[TimeMonitor(), myCallback],
+    trainer.train(epoch_size, dataset_train, callbacks=[TimeMonitor(), myCallback],
                   dataset_sink_mode=args.dataset_sink_mode)
 
     time_end = time.time()
